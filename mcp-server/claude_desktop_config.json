@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "simpleldap": {
+      "command": "node",
+      "args": [
+        "/Users/matsbaccano/Projects/verify/simpleldap/mcp-server/dist/index.js"
+      ],
+      "env": {
+        "SIMPLELDAP_API_URL": "http://localhost:3004",
+        "SIMPLELDAP_API_KEY": "test-api-key-1",
+        "SIMPLELDAP_TIMEOUT": "10000"
+      }
+    }
+  }
+}
