@@ -1,4 +1,5 @@
-import { NextResponse } from 'next/server';
+import { createApiResponse, createErrorResponse, validateRequired, validateEmail, validatePassword, validateEmployeeNumber, ApiError } from '../../../../lib/api-utils';
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const UserManager = require('../../../../lib/user-manager');
 
 const userManager = new UserManager();
@@ -9,8 +10,7 @@ export async function GET() {
     const users = userManager.getAllUsers();
     const stats = userManager.getStats();
 
-    return NextResponse.json({
-      success: true,
+    return createApiResponse(true, {
       users: Object.keys(users).map(email => ({
         email,
         dn: users[email].dn,
@@ -19,41 +19,46 @@ export async function GET() {
       stats
     });
   } catch (error) {
-    return NextResponse.json({
-      success: false,
-      message: error.message
-    }, { status: 500 });
+    return createErrorResponse(error);
   }
 }
 
 // POST: 新しいユーザーの追加
 export async function POST(request) {
   try {
-    const body = await request.json();
-    const { email, password, attributes } = body;
-
-    if (!email || !password) {
-      return NextResponse.json({
-        success: false,
-        message: 'Email and password are required'
-      }, { status: 400 });
+    const data = await request.json();
+    
+    // 入力値検証
+    validateRequired(data, ['email', 'password']);
+    validateEmail(data.email);
+    validatePassword(data.password);
+    
+    const { email, password, attributes } = data;
+    
+    // 属性の検証
+    if (attributes) {
+      if (attributes.employeeNumber) {
+        validateEmployeeNumber(attributes.employeeNumber);
+      }
+      if (attributes.role && !['admin', 'manager', 'employee'].includes(attributes.role)) {
+        throw new ApiError('Invalid role. Must be admin, manager, or employee', 400);
+      }
+      if (attributes.employeeType && !['正社員', '契約社員', '役員'].includes(attributes.employeeType)) {
+        throw new ApiError('Invalid employee type', 400);
+      }
     }
 
     const user = await userManager.addUser(email, password, attributes);
 
-    return NextResponse.json({
-      success: true,
+    return createApiResponse(true, {
       message: 'User created successfully',
       user: {
         email,
         dn: user.dn,
         attributes: user.attributes
       }
-    });
+    }, null, 201);
   } catch (error) {
-    return NextResponse.json({
-      success: false,
-      message: error.message
-    }, { status: 400 });
+    return createErrorResponse(error);
   }
 }

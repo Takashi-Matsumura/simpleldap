@@ -1,4 +1,5 @@
-import { NextResponse } from 'next/server';
+import { createApiResponse, createErrorResponse, validateRequired, validateEmail, ApiError } from '../../../../lib/api-utils';
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const UserManager = require('../../../../lib/user-manager');
 
 const userManager = new UserManager();
@@ -6,24 +7,24 @@ const userManager = new UserManager();
 // POST: ユーザー認証テスト
 export async function POST(request) {
   try {
-    const body = await request.json();
-    const { email, password } = body;
-
-    if (!email || !password) {
-      return NextResponse.json({
-        success: false,
-        message: 'Email and password are required'
-      }, { status: 400 });
-    }
-
-    // UserManagerを使用した認証
+    const data = await request.json();
+    
+    // 入力値検証
+    validateRequired(data, ['email', 'password']);
+    validateEmail(data.email);
+    
+    const { email, password } = data;
     const result = await userManager.authenticateUser(email, password);
-
-    return NextResponse.json(result);
+    
+    if (result.success) {
+      return createApiResponse(true, {
+        message: result.message,
+        user: result.user
+      });
+    } else {
+      throw new ApiError(result.message, 401);
+    }
   } catch (error) {
-    return NextResponse.json({
-      success: false,
-      message: error.message
-    }, { status: 500 });
+    return createErrorResponse(error);
   }
 }

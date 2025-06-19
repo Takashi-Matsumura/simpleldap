@@ -9,6 +9,8 @@
     "lint": "next lint",
     "init-users": "node scripts/init-users.js",
     "init-users-force": "node scripts/init-users.js --force",
+    "init-company-users": "node scripts/init-company-users.js",
+    "init-company-users-force": "node scripts/init-company-users.js --force",
     "ldap-server": "node scripts/start-ldap-server.js",
     "test-auth": "node scripts/test-auth.js"
   },

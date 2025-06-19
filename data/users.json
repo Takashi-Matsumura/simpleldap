@@ -1,13 +1,13 @@
 {
   "users": {
-    "admin@example.com": {
-      "dn": "mail=admin@example.com,ou=users,dc=example,dc=com",
-      "password": "$2b$10$agKdJCQgalTi4J1Ajg2P/OZ/tSoDBgle5EAEnB.RUcU3/Q7UFMIu.",
+    "ceo@company.com": {
+      "dn": "mail=ceo@company.com,ou=users,dc=example,dc=com",
+      "password": "$2b$10$RTPUkRcaJ/LLj9H1C5q0Dud.6PH6pCHArIQH/9wwZHz2JQ7kP2uIi",
       "attributes": {
-        "mail": "admin@example.com",
-        "cn": "Administrator",
-        "givenName": "Admin",
-        "sn": "User",
+        "mail": "ceo@company.com",
+        "cn": "田中社長",
+        "givenName": "太郎",
+        "sn": "田中",
         "role": "admin",
         "objectClass": [
           "inetOrgPerson",
@@ -15,42 +15,284 @@
           "person",
           "top"
         ],
-        "telephoneNumber": "123-456-7890"
+        "employeeNumber": "CEO001",
+        "department": "経営陣",
+        "division": "本社",
+        "title": "代表取締役社長",
+        "employeeType": "役員",
+        "telephoneNumber": "03-1234-0001",
+        "mobile": "080-0001-0001",
+        "physicalDeliveryOfficeName": "東京本社",
+        "costCenter": "CC-EXEC-001",
+        "hireDate": "2015-01-01",
+        "jobCode": "CEO"
       }
     },
-    "user@example.com": {
-      "dn": "mail=user@example.com,ou=users,dc=example,dc=com",
-      "password": "$2b$10$SfdL78pwVu9l9Ba9fG6R/.Zybg4PExwhDdZhngMpSXTzZsZoUlqEC",
+    "sales.director@company.com": {
+      "dn": "mail=sales.director@company.com,ou=users,dc=example,dc=com",
+      "password": "$2b$10$4MhKjXFzd7zkuG7qyBdDe.tGskpA1G9hk.Oz9ScSqqfQKawC2OKNy",
       "attributes": {
-        "mail": "user@example.com",
-        "cn": "Regular User",
-        "givenName": "Regular",
-        "sn": "User",
-        "role": "user",
+        "mail": "sales.director@company.com",
+        "cn": "佐藤営業部長",
+        "givenName": "次郎",
+        "sn": "佐藤",
+        "role": "manager",
         "objectClass": [
           "inetOrgPerson",
           "organizationalPerson",
           "person",
           "top"
         ],
-        "telephoneNumber": "987-654-3210"
+        "employeeNumber": "MGR001",
+        "department": "営業部",
+        "division": "営業本部",
+        "title": "営業部長",
+        "manager": "cn=田中社長,ou=users,dc=company,dc=com",
+        "employeeType": "正社員",
+        "telephoneNumber": "03-1234-0002",
+        "mobile": "080-0002-0002",
+        "physicalDeliveryOfficeName": "東京本社",
+        "costCenter": "CC-SALES-001",
+        "hireDate": "2016-04-01",
+        "jobCode": "SALES-DIR"
       }
     },
-    "test@example.com": {
-      "dn": "mail=test@example.com,ou=users,dc=example,dc=com",
-      "password": "$2b$10$oLWr4XVtN1j5HG2mwW/KZuJyMICEzmS0wCA.23q7zbEJrzzvO8Try",
+    "tanaka.sales@company.com": {
+      "dn": "mail=tanaka.sales@company.com,ou=users,dc=example,dc=com",
+      "password": "$2b$10$chxhGk56ulBUI.gHUV10teXhyPzyA1klUt8OYuxFGhw2LT9Stj1WG",
       "attributes": {
-        "mail": "test@example.com",
-        "cn": "Test User",
-        "givenName": "Test",
-        "sn": "User",
-        "role": "user",
+        "mail": "tanaka.sales@company.com",
+        "cn": "田中営業課長",
+        "givenName": "三郎",
+        "sn": "田中",
+        "role": "employee",
         "objectClass": [
           "inetOrgPerson",
           "organizationalPerson",
           "person",
           "top"
+        ],
+        "employeeNumber": "EMP001",
+        "department": "営業部",
+        "division": "営業本部",
+        "title": "営業課長",
+        "manager": "cn=佐藤営業部長,ou=users,dc=company,dc=com",
+        "employeeType": "正社員",
+        "telephoneNumber": "03-1234-0101",
+        "mobile": "080-0101-0101",
+        "physicalDeliveryOfficeName": "東京本社",
+        "costCenter": "CC-SALES-001",
+        "hireDate": "2018-07-15",
+        "jobCode": "SALES-MGR"
+      }
+    },
+    "yamada.sales@company.com": {
+      "dn": "mail=yamada.sales@company.com,ou=users,dc=example,dc=com",
+      "password": "$2b$10$R4Af7nTQMFzC0lJBINVjpO9t.tEnU5lsMb2CwITGmnFbda/DOzhFu",
+      "attributes": {
+        "mail": "yamada.sales@company.com",
+        "cn": "山田営業担当",
+        "givenName": "花子",
+        "sn": "山田",
+        "role": "employee",
+        "objectClass": [
+          "inetOrgPerson",
+          "organizationalPerson",
+          "person",
+          "top"
+        ],
+        "employeeNumber": "EMP002",
+        "department": "営業部",
+        "division": "営業本部",
+        "title": "営業担当",
+        "manager": "cn=田中営業課長,ou=users,dc=company,dc=com",
+        "employeeType": "正社員",
+        "telephoneNumber": "03-1234-0102",
+        "mobile": "080-0102-0102",
+        "physicalDeliveryOfficeName": "東京本社",
+        "costCenter": "CC-SALES-001",
+        "hireDate": "2020-04-01",
+        "jobCode": "SALES-STAFF"
+      }
+    },
+    "hr.manager@company.com": {
+      "dn": "mail=hr.manager@company.com,ou=users,dc=example,dc=com",
+      "password": "$2b$10$h7VLOGuREHosc5NIjM6.bua9ctySs2ApLEha9oZlDRIXwUchxEeQe",
+      "attributes": {
+        "mail": "hr.manager@company.com",
+        "cn": "鈴木人事部長",
+        "givenName": "一郎",
+        "sn": "鈴木",
+        "role": "manager",
+        "objectClass": [
+          "inetOrgPerson",
+          "organizationalPerson",
+          "person",
+          "top"
+        ],
+        "employeeNumber": "MGR002",
+        "department": "人事部",
+        "division": "管理本部",
+        "title": "人事部長",
+        "manager": "cn=田中社長,ou=users,dc=company,dc=com",
+        "employeeType": "正社員",
+        "telephoneNumber": "03-1234-0003",
+        "mobile": "080-0003-0003",
+        "physicalDeliveryOfficeName": "東京本社",
+        "costCenter": "CC-HR-001",
+        "hireDate": "2017-01-15",
+        "jobCode": "HR-DIR",
+        "certifications": [
+          "人事労務管理士",
+          "社会保険労務士"
         ]
+      }
+    },
+    "sato.hr@company.com": {
+      "dn": "mail=sato.hr@company.com,ou=users,dc=example,dc=com",
+      "password": "$2b$10$VGwlQiahWd8B8RahGxuWaO2rwvIZNi.c86jZUwa117DL.otwSGJ1G",
+      "attributes": {
+        "mail": "sato.hr@company.com",
+        "cn": "佐藤人事担当",
+        "givenName": "美咲",
+        "sn": "佐藤",
+        "role": "employee",
+        "objectClass": [
+          "inetOrgPerson",
+          "organizationalPerson",
+          "person",
+          "top"
+        ],
+        "employeeNumber": "EMP003",
+        "department": "人事部",
+        "division": "管理本部",
+        "title": "人事担当",
+        "manager": "cn=鈴木人事部長,ou=users,dc=company,dc=com",
+        "employeeType": "正社員",
+        "telephoneNumber": "03-1234-0201",
+        "mobile": "080-0201-0201",
+        "physicalDeliveryOfficeName": "東京本社",
+        "costCenter": "CC-HR-001",
+        "hireDate": "2019-10-01",
+        "jobCode": "HR-STAFF"
+      }
+    },
+    "it.manager@company.com": {
+      "dn": "mail=it.manager@company.com,ou=users,dc=example,dc=com",
+      "password": "$2b$10$1i/QMSvZhs98Ud8drQ5l6uP4WXLgJXjr89x9aW4ThRR3572RnGQYS",
+      "attributes": {
+        "mail": "it.manager@company.com",
+        "cn": "高橋IT部長",
+        "givenName": "健太",
+        "sn": "高橋",
+        "role": "manager",
+        "objectClass": [
+          "inetOrgPerson",
+          "organizationalPerson",
+          "person",
+          "top"
+        ],
+        "employeeNumber": "MGR003",
+        "department": "IT部",
+        "division": "技術本部",
+        "title": "IT部長",
+        "manager": "cn=田中社長,ou=users,dc=company,dc=com",
+        "employeeType": "正社員",
+        "telephoneNumber": "03-1234-0004",
+        "mobile": "080-0004-0004",
+        "physicalDeliveryOfficeName": "東京本社",
+        "costCenter": "CC-IT-001",
+        "hireDate": "2016-08-01",
+        "jobCode": "IT-DIR"
+      }
+    },
+    "dev.lead@company.com": {
+      "dn": "mail=dev.lead@company.com,ou=users,dc=example,dc=com",
+      "password": "$2b$10$zlIucltF439wmhvmJGxy6.OKkxp88niFnygl1QtUr4V4V77Q48oC6",
+      "attributes": {
+        "mail": "dev.lead@company.com",
+        "cn": "伊藤開発リーダー",
+        "givenName": "拓也",
+        "sn": "伊藤",
+        "role": "employee",
+        "objectClass": [
+          "inetOrgPerson",
+          "organizationalPerson",
+          "person",
+          "top"
+        ],
+        "employeeNumber": "EMP004",
+        "department": "IT部",
+        "division": "技術本部",
+        "title": "開発リーダー",
+        "manager": "cn=高橋IT部長,ou=users,dc=company,dc=com",
+        "employeeType": "正社員",
+        "telephoneNumber": "03-1234-0301",
+        "mobile": "080-0301-0301",
+        "physicalDeliveryOfficeName": "東京本社",
+        "costCenter": "CC-IT-001",
+        "hireDate": "2018-03-15",
+        "jobCode": "DEV-LEAD"
+      }
+    },
+    "contract.dev@company.com": {
+      "dn": "mail=contract.dev@company.com,ou=users,dc=example,dc=com",
+      "password": "$2b$10$mOA/pYaSYfwqvoQG.d/MzeEETBTXn3DEEv7.PbU8zLsAbwdWT3HLu",
+      "attributes": {
+        "mail": "contract.dev@company.com",
+        "cn": "森契約エンジニア",
+        "givenName": "隆",
+        "sn": "森",
+        "role": "employee",
+        "objectClass": [
+          "inetOrgPerson",
+          "organizationalPerson",
+          "person",
+          "top"
+        ],
+        "employeeNumber": "CON001",
+        "department": "IT部",
+        "division": "技術本部",
+        "title": "エンジニア",
+        "manager": "cn=伊藤開発リーダー,ou=users,dc=company,dc=com",
+        "employeeType": "契約社員",
+        "telephoneNumber": "03-1234-0302",
+        "mobile": "080-0302-0302",
+        "physicalDeliveryOfficeName": "東京本社",
+        "costCenter": "CC-IT-001",
+        "hireDate": "2021-06-01",
+        "jobCode": "DEV-ENG",
+        "contractEndDate": "2024-05-31"
+      }
+    },
+    "osaka.sales@company.com": {
+      "dn": "mail=osaka.sales@company.com,ou=users,dc=example,dc=com",
+      "password": "$2b$10$knktaDknwt5k.yIfeafkyO69W/u29kUP9ss9ZZiC4sMlDTxTRLaq2",
+      "attributes": {
+        "mail": "osaka.sales@company.com",
+        "cn": "大阪営業所長",
+        "givenName": "次郎",
+        "sn": "大阪",
+        "role": "manager",
+        "objectClass": [
+          "inetOrgPerson",
+          "organizationalPerson",
+          "person",
+          "top"
+        ],
+        "employeeNumber": "OSA001",
+        "department": "営業部",
+        "division": "関西支社",
+        "title": "営業所長",
+        "manager": "cn=佐藤営業部長,ou=users,dc=company,dc=com",
+        "employeeType": "正社員",
+        "telephoneNumber": "06-1234-0001",
+        "mobile": "080-0501-0501",
+        "physicalDeliveryOfficeName": "大阪支社",
+        "postalAddress": "大阪府大阪市北区梅田1-1-1",
+        "costCenter": "CC-SALES-OSA",
+        "hireDate": "2017-10-01",
+        "jobCode": "SALES-MGR"
       }
     }
   },
