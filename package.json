@@ -12,7 +12,8 @@
     "init-company-users": "node scripts/init-company-users.js",
     "init-company-users-force": "node scripts/init-company-users.js --force",
     "ldap-server": "node scripts/start-ldap-server.js",
-    "test-auth": "node scripts/test-auth.js"
+    "test-auth": "node scripts/test-auth.js",
+    "test-external-api": "node scripts/test-external-api.js"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",
