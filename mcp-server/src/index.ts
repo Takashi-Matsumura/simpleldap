@@ -17,103 +17,21 @@ import {
 } from '@modelcontextprotocol/sdk/types.js';
 
 import { SimpleLDAPClient } from './api-client.js';
-import { MCPServerConfig } from './types.js';
+import { loadConfig } from './config/index.js';
+import { ToolRegistry } from './tools/registry.js';
+import { handleToolError } from './utils/error-handler.js';
 
-// Import tool implementations
-import { searchEmployees, employeeSearchSchema } from './tools/employee-search.js';
-import { getEmployeeDetails, employeeDetailsSchema } from './tools/employee-details.js';
-import { getOrganizationStructure, organizationStructureSchema } from './tools/organization.js';
-import { getDepartmentInfo, departmentInfoSchema } from './tools/department.js';
-import { verifyEmployeeAuth, authVerifySchema } from './tools/auth-verify.js';
-import { getCompanyStatistics, companyStatisticsSchema } from './tools/statistics.js';
-
-// Server configuration
-const SERVER_CONFIG: MCPServerConfig = {
-  simpleldap: {
-    baseUrl: process.env.SIMPLELDAP_API_URL || 'http://localhost:3000',
-    apiKey: process.env.SIMPLELDAP_API_KEY || 'test-api-key-1',
-    timeout: parseInt(process.env.SIMPLELDAP_TIMEOUT || '10000')
-  },
-  server: {
-    name: 'simpleldap-mcp-server',
-    version: '1.0.0'
-  }
-};
+// Load and validate configuration
+const SERVER_CONFIG = loadConfig();
 
 // Initialize SimpleLDAP API client
 const simpleldapClient = new SimpleLDAPClient(SERVER_CONFIG.simpleldap);
 
-// Define available tools
-const TOOLS: Tool[] = [
-  {
-    name: 'search_employees',
-    description: '社員を検索します。名前、部署、部門、役職などで条件を指定できます。',
-    inputSchema: {
-      type: 'object',
-      properties: {
-        query: { type: 'string', description: '検索キーワード（名前、メールアドレス、社員番号）' },
-        department: { type: 'string', description: '部署でフィルタリング（例: 営業部、人事部）' },
-        division: { type: 'string', description: '部門でフィルタリング（例: 営業本部、管理本部）' },
-        role: { type: 'string', description: '役職でフィルタリング（admin, manager, employee）' },
-        limit: { type: 'number', minimum: 1, maximum: 100, default: 10, description: '結果の最大件数（1-100）' }
-      }
-    }
-  },
-  {
-    name: 'get_employee_details',
-    description: '特定の社員の詳細情報を取得します。社員IDまたはメールアドレスを指定してください。',
-    inputSchema: {
-      type: 'object',
-      properties: {
-        employee_id: { type: 'string', description: '社員IDまたはメールアドレス（例: EMP001 または tanaka.sales@company.com）' }
-      },
-      required: ['employee_id']
-    }
-  },
-  {
-    name: 'get_organization_structure',
-    description: '会社の組織構造と管理階層を取得します。部門・部署の構成と管理関係を確認できます。',
-    inputSchema: {
-      type: 'object',
-      properties: {
-        include_hierarchy: { type: 'boolean', default: true, description: '管理階層ツリーを含めるか（true: 含める, false: 部門情報のみ）' }
-      }
-    }
-  },
-  {
-    name: 'get_department_info',
-    description: '特定の部署の詳細情報と所属社員を取得します。部署名を指定してください。',
-    inputSchema: {
-      type: 'object',
-      properties: {
-        department_name: { type: 'string', description: '部署名（例: 営業部、人事部、IT部）' }
-      },
-      required: ['department_name']
-    }
-  },
-  {
-    name: 'verify_employee_auth',
-    description: '社員の認証情報を確認します。メールアドレスとパスワードで認証をテストできます。',
-    inputSchema: {
-      type: 'object',
-      properties: {
-        email: { type: 'string', format: 'email', description: 'メールアドレス' },
-        password: { type: 'string', description: 'パスワード（注意: 実際のパスワードは慎重に扱ってください）' }
-      },
-      required: ['email', 'password']
-    }
-  },
-  {
-    name: 'get_company_statistics',
-    description: '会社全体の統計情報を取得します。従業員数、部署数、部門別統計などを確認できます。',
-    inputSchema: {
-      type: 'object',
-      properties: {
-        include_departments: { type: 'boolean', default: true, description: '部署別の詳細統計を含めるか' }
-      }
-    }
-  }
-];
+// Initialize tool registry
+const toolRegistry = ToolRegistry.getInstance();
+
+// Get tool definitions for MCP
+const TOOLS: Tool[] = toolRegistry.getToolDefinitions();
 
 // Create MCP server
 const server = new Server(
@@ -140,105 +58,21 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
   const { name, arguments: args } = request.params;
 
   try {
-    switch (name) {
-      case 'search_employees': {
-        const parsedArgs = employeeSearchSchema.parse(args);
-        const result = await searchEmployees(simpleldapClient, parsedArgs);
-        return {
-          content: [
-            {
-              type: 'text',
-              text: result,
-            },
-          ],
-        };
-      }
-
-      case 'get_employee_details': {
-        const parsedArgs = employeeDetailsSchema.parse(args);
-        const result = await getEmployeeDetails(simpleldapClient, parsedArgs);
-        return {
-          content: [
-            {
-              type: 'text',
-              text: result,
-            },
-          ],
-        };
-      }
-
-      case 'get_organization_structure': {
-        const parsedArgs = organizationStructureSchema.parse(args);
-        const result = await getOrganizationStructure(simpleldapClient, parsedArgs);
-        return {
-          content: [
-            {
-              type: 'text',
-              text: result,
-            },
-          ],
-        };
-      }
-
-      case 'get_department_info': {
-        const parsedArgs = departmentInfoSchema.parse(args);
-        const result = await getDepartmentInfo(simpleldapClient, parsedArgs);
-        return {
-          content: [
-            {
-              type: 'text',
-              text: result,
-            },
-          ],
-        };
-      }
-
-      case 'verify_employee_auth': {
-        const parsedArgs = authVerifySchema.parse(args);
-        const result = await verifyEmployeeAuth(simpleldapClient, parsedArgs);
-        return {
-          content: [
-            {
-              type: 'text',
-              text: result,
-            },
-          ],
-        };
-      }
-
-      case 'get_company_statistics': {
-        const parsedArgs = companyStatisticsSchema.parse(args);
-        const result = await getCompanyStatistics(simpleldapClient, parsedArgs);
-        return {
-          content: [
-            {
-              type: 'text',
-              text: result,
-            },
-          ],
-        };
-      }
-
-      default:
-        throw new Error(`Unknown tool: ${name}`);
-    }
-  } catch (error) {
-    if (error instanceof Error) {
-      return {
-        content: [
-          {
-            type: 'text',
-            text: `❌ エラー: ${error.message}`,
-          },
-        ],
-        isError: true,
-      };
-    }
+    const result = await toolRegistry.execute(name, simpleldapClient, args);
     return {
       content: [
         {
           type: 'text',
-          text: '❌ 予期しないエラーが発生しました',
+          text: result,
+        },
+      ],
+    };
+  } catch (error) {
+    return {
+      content: [
+        {
+          type: 'text',
+          text: handleToolError(error, `Tool ${name}`),
         },
       ],
       isError: true,

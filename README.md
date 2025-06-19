@@ -1,6 +1,6 @@
 # 🔐 SimpleLDAP - Employee Management System
 
-SimpleLDAPは、LDAP認証と包括的な社員情報管理機能を備えた、モダンなWebベースの従業員管理システムです。Next.js 15とTypeScriptで構築され、企業の人事管理や認証システムの検証に最適です。
+SimpleLDAPは、LDAP認証と包括的な社員情報管理機能を備えた、モダンなWebベースの従業員管理システムです。Next.js 15とTypeScriptで構築され、企業の人事管理や認証システムの検証に最適です。さらに、MCP（Model Context Protocol）サーバーを統合することで、Claude DesktopからAIアシスタントによる自然な日本語での社員情報アクセスが可能です。
 
 ## 📋 概要
 
@@ -125,6 +125,29 @@ simpleldap/
 │   └── users.json               # ユーザーデータ
 ├── docs/                        # 🆕 API仕様書
 │   └── API_DOCUMENTATION.md     # 外部API詳細仕様
+├── mcp-server/                  # 🚀 MCP (Model Context Protocol) サーバー
+│   ├── src/
+│   │   ├── index.ts             # MCPサーバーメイン
+│   │   ├── api-client.ts        # SimpleLDAP APIクライアント
+│   │   ├── types.ts             # 型定義
+│   │   ├── config/              # 設定管理
+│   │   ├── constants.ts         # 定数定義
+│   │   ├── utils/               # ユーティリティ
+│   │   │   ├── error-handler.ts # エラーハンドリング
+│   │   │   └── formatters.ts    # 出力フォーマッター
+│   │   └── tools/               # MCPツール実装
+│   │       ├── registry.ts      # ツールレジストリ
+│   │       ├── employee-search.ts
+│   │       ├── employee-details.ts
+│   │       ├── organization.ts
+│   │       ├── department.ts
+│   │       ├── auth-verify.ts
+│   │       └── statistics.ts
+│   ├── dist/                    # ビルド成果物
+│   ├── package.json
+│   ├── tsconfig.json
+│   ├── README.md
+│   └── claude_desktop_config.json # Claude Desktop設定例
 ├── public/                      # 静的ファイル
 │   ├── api-test.html            # 🆕 インタラクティブAPIテストページ
 │   └── [その他静的ファイル]
@@ -133,7 +156,8 @@ simpleldap/
     ├── LDAP認証テスト環境の実現可能性.md
     ├── LDAPユーザー情報の保存方法.md
     ├── 社員情報属性の追加方法.md
-    └── SimpleLDAP外部API実装レポート.md # 🆕 API実装レポート
+    ├── SimpleLDAP外部API実装レポート.md # 🆕 API実装レポート
+    └── mcp-implementation-log.md # 🚀 MCP実装ログ
 ```
 
 ## 🛠️ 利用可能なスクリプト
@@ -189,11 +213,29 @@ npm run test-external-api
 # ✅ 認証API、社員管理API、組織構造API、エラーハンドリング、CORS対応等を検証
 ```
 
+### 🚀 MCP Server関連コマンド
+
+```bash
+# MCPサーバーのビルド
+cd mcp-server
+npm install
+npm run build
+
+# 開発モード（TypeScript監視）
+npm run watch
+
+# 手動実行（デバッグ用）
+npm run dev
+
+# Claude Desktop設定例の確認
+cat claude_desktop_config.json
+```
+
 ## 🌐 WebUI機能詳細
 
 ### タブ構成
 
-SimpleLDAPは3つの主要なタブで構成され、各機能が整理されています：
+SimpleLDAPは4つの主要なタブで構成され、各機能が整理されています：
 
 #### 1. 🧪 Authentication Test
 - **認証テスト機能**: メールアドレスとパスワードでのリアルタイム認証検証
@@ -251,6 +293,32 @@ SimpleLDAPは3つの主要なタブで構成され、各機能が整理されて
 - `Authorization: Bearer <token>` (Bearer Token認証)
 
 **詳細**: [API仕様書](./docs/API_DOCUMENTATION.md) | [テストページ](./public/api-test.html)
+
+#### 🚀 MCP (Model Context Protocol) インターフェース
+
+Claude Desktopから自然な日本語で社員情報にアクセス可能：
+
+**利用可能なMCPツール**:
+- `search_employees` - 社員検索（部署、役職、名前等でフィルタリング）
+- `get_employee_details` - 特定社員の詳細情報取得
+- `get_organization_structure` - 会社組織構造と管理階層
+- `get_department_info` - 部署別の詳細情報と統計
+- `verify_employee_auth` - 社員認証確認
+- `get_company_statistics` - 全社統計情報
+
+**使用例**:
+```
+ユーザー: "営業部の社員一覧を教えて"
+Claude: search_employees ツールを使用して営業部の社員を検索します...
+
+ユーザー: "田中営業課長の詳細情報を見せて"
+Claude: get_employee_details ツールを使用して詳細情報を取得します...
+
+ユーザー: "会社の組織図を表示して"
+Claude: get_organization_structure ツールを使用して組織構造を取得します...
+```
+
+**設定方法**: [MCPサーバー設定ガイド](./mcp-server/README.md)
 
 ## 🔧 技術スタック
 
@@ -376,10 +444,12 @@ npm run test-auth search
 - **✅ レート制限**: 時間あたりのアクセス制限とヘッダー情報
 - **✅ テスト完備**: 100%成功率の包括的テストスイート (74テストケース)
 
-### Phase 2: MCP (Model Context Protocol) 対応
-- **AIエージェント連携**: ChatGPT/Claude等からの社員情報アクセス
-- **MCPツール実装**: 社員検索、組織構造取得、権限管理
-- **セキュアな統合**: MCPプロトコルでの安全なデータアクセス
+### ✅ Phase 2: MCP (Model Context Protocol) 対応 (完了)
+- **✅ MCPサーバー実装**: Claude Desktop統合による自然言語での社員情報アクセス
+- **✅ 6つのMCPツール**: 社員検索、詳細取得、組織構造、部署情報、認証確認、統計取得
+- **✅ 日本語対応**: 完全日本語インターフェースとレスポンス
+- **✅ リファクタリング**: 型安全性、エラーハンドリング、保守性の向上
+- **✅ Claude Desktop設定**: ワンクリック設定ファイルとドキュメント完備
 
 ### Phase 3: エンタープライズ機能
 - **PostgreSQL対応**: スケーラブルなデータベース統合
@@ -410,10 +480,15 @@ npm run test-auth search
 - [LDAPユーザー情報の保存方法](./output/LDAPユーザー情報の保存方法.md)
 - [社員情報属性の追加方法](./output/社員情報属性の追加方法.md)
 - [🆕 SimpleLDAP外部API実装レポート](./output/SimpleLDAP外部API実装レポート.md)
+- [🚀 MCPサーバー実装ログ](./output/mcp-implementation-log.md)
 
 ### API関連ドキュメント
 - [外部API仕様書](./docs/API_DOCUMENTATION.md)
 - [インタラクティブAPIテストページ](./public/api-test.html)
+
+### MCP関連ドキュメント
+- [MCPサーバー設定ガイド](./mcp-server/README.md)
+- [MCPサーバー実装ログ](./output/mcp-implementation-log.md)
 
 ### 外部リソース
 - [Next.js Documentation](https://nextjs.org/docs)

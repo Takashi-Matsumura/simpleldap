@@ -1,6 +1,6 @@
 // SimpleLDAP API Client for MCP Server
 
-import fetch from 'node-fetch';
+import fetch, { Response as NodeFetchResponse } from 'node-fetch';
 import {
   ApiResponse,
   EmployeeListResponse,
@@ -10,6 +10,7 @@ import {
   AuthVerifyResponse,
   SimpleLDAPClientConfig
 } from './types.js';
+import { RequestOptions } from './types/api.js';
 
 export class SimpleLDAPClient {
   private baseUrl: string;
@@ -22,11 +23,7 @@ export class SimpleLDAPClient {
     this.timeout = config.timeout || 10000;
   }
 
-  private async makeRequest<T>(endpoint: string, options: {
-    method?: 'GET' | 'POST';
-    body?: any;
-    params?: Record<string, string>;
-  } = {}): Promise<ApiResponse<T>> {
+  private async makeRequest<T>(endpoint: string, options: RequestOptions = {}): Promise<ApiResponse<T>> {
     const { method = 'GET', body, params } = options;
     
     // Build URL with query parameters
@@ -37,14 +34,14 @@ export class SimpleLDAPClient {
       });
     }
 
-    const requestOptions: any = {
+    const requestOptions: RequestInit = {
       method,
       headers: {
         'X-API-Key': this.apiKey,
         'Content-Type': 'application/json',
         'User-Agent': 'SimpleLDAP-MCP-Server/1.0.0'
       },
-      timeout: this.timeout
+      // Note: timeout is handled by fetchWithTimeout
     };
 
     if (body && method === 'POST') {
@@ -52,7 +49,7 @@ export class SimpleLDAPClient {
     }
 
     try {
-      const response = await fetch(url.toString(), requestOptions);
+      const response = await this.fetchWithTimeout(url.toString(), requestOptions);
       const data = await response.json() as ApiResponse<T>;
       
       if (!response.ok) {
@@ -65,6 +62,26 @@ export class SimpleLDAPClient {
         throw new Error(`SimpleLDAP API Error: ${error.message}`);
       }
       throw new Error('SimpleLDAP API Error: Unknown error');
+    }
+  }
+
+  private async fetchWithTimeout(url: string, options: any): Promise<NodeFetchResponse> {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), this.timeout);
+    
+    try {
+      const response = await fetch(url, {
+        ...options,
+        signal: controller.signal
+      });
+      clearTimeout(timeoutId);
+      return response;
+    } catch (error) {
+      clearTimeout(timeoutId);
+      if (error instanceof Error && error.name === 'AbortError') {
+        throw new Error('Request timeout');
+      }
+      throw error;
     }
   }
 
