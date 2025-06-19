@@ -1,0 +1,58 @@
+{
+  "users": {
+    "admin@example.com": {
+      "dn": "mail=admin@example.com,ou=users,dc=example,dc=com",
+      "password": "$2b$10$agKdJCQgalTi4J1Ajg2P/OZ/tSoDBgle5EAEnB.RUcU3/Q7UFMIu.",
+      "attributes": {
+        "mail": "admin@example.com",
+        "cn": "Administrator",
+        "givenName": "Admin",
+        "sn": "User",
+        "role": "admin",
+        "objectClass": [
+          "inetOrgPerson",
+          "organizationalPerson",
+          "person",
+          "top"
+        ],
+        "telephoneNumber": "123-456-7890"
+      }
+    },
+    "user@example.com": {
+      "dn": "mail=user@example.com,ou=users,dc=example,dc=com",
+      "password": "$2b$10$SfdL78pwVu9l9Ba9fG6R/.Zybg4PExwhDdZhngMpSXTzZsZoUlqEC",
+      "attributes": {
+        "mail": "user@example.com",
+        "cn": "Regular User",
+        "givenName": "Regular",
+        "sn": "User",
+        "role": "user",
+        "objectClass": [
+          "inetOrgPerson",
+          "organizationalPerson",
+          "person",
+          "top"
+        ],
+        "telephoneNumber": "987-654-3210"
+      }
+    },
+    "test@example.com": {
+      "dn": "mail=test@example.com,ou=users,dc=example,dc=com",
+      "password": "$2b$10$oLWr4XVtN1j5HG2mwW/KZuJyMICEzmS0wCA.23q7zbEJrzzvO8Try",
+      "attributes": {
+        "mail": "test@example.com",
+        "cn": "Test User",
+        "givenName": "Test",
+        "sn": "User",
+        "role": "user",
+        "objectClass": [
+          "inetOrgPerson",
+          "organizationalPerson",
+          "person",
+          "top"
+        ]
+      }
+    }
+  },
+  "config": {}
+}
