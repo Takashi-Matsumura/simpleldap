@@ -6,13 +6,15 @@ import { AuthTestTab } from '@/components/AuthTestTab';
 import { EmployeeForm } from '@/components/EmployeeForm';
 import { EmployeeTable } from '@/components/EmployeeTable';
 import { OrganizationTab } from '@/components/OrganizationTab';
+import { ExternalApiTestTab } from '@/components/ExternalApiTestTab';
 import { StatsCards } from '@/components/StatsCards';
 import { TabNavigation, Tab } from '@/components/TabNavigation';
 
 const tabs: Tab[] = [
   { id: 'auth', name: '🧪 Authentication Test', description: 'Test LDAP authentication' },
   { id: 'employees', name: '👥 Employee Management', description: 'Manage employees and view directory' },
-  { id: 'organization', name: '🏢 Organization', description: 'View departments and organization chart' }
+  { id: 'organization', name: '🏢 Organization', description: 'View departments and organization chart' },
+  { id: 'external-api', name: '🔌 External API Test', description: 'Test external APIs and analyze data structures' }
 ];
 
 export default function Home() {
@@ -77,6 +79,9 @@ export default function Home() {
 
           {/* Organization Tab */}
           {activeTab === 'organization' && <OrganizationTab />}
+
+          {/* External API Test Tab */}
+          {activeTab === 'external-api' && <ExternalApiTestTab />}
         </div>
       </div>
     </div>
