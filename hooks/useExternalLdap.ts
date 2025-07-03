@@ -98,8 +98,8 @@ export const useExternalLdap = () => {
       if (data.success) {
         setConnectionResult({
           success: true,
-          message: data.data.message,
-          server: data.data.server
+          message: data.message || 'Connection successful',
+          server: data.server
         });
       } else {
         throw new Error(data.error?.message || 'Connection test failed');
@@ -147,9 +147,9 @@ export const useExternalLdap = () => {
       if (data.success) {
         setAuthResult({
           success: true,
-          message: data.data.message,
-          user: data.data.user,
-          server: data.data.server
+          message: data.message || 'Authentication successful',
+          user: data.user,
+          server: data.server
         });
       } else {
         const errorMessage = data.error?.message || 'Authentication failed';
